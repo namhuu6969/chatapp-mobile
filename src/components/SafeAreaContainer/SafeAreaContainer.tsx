@@ -18,7 +18,7 @@ type SafeAreaContainerProps = {
   scrollProps?: ScrollViewProps;
 };
 
-export const SafeAreaContainer: React.FC<SafeAreaContainerProps> = ({
+const SafeAreaContainer: React.FC<SafeAreaContainerProps> = ({
   children,
   scroll = false,
   style,
@@ -27,17 +27,22 @@ export const SafeAreaContainer: React.FC<SafeAreaContainerProps> = ({
   scrollProps,
 }) => {
   return (
-    <SafeAreaView style={[styles.flex, style]} edges={edges}>
+    <SafeAreaView style={styles.flex} edges={edges}>
       {scroll ? (
         <ScrollView
           {...scrollProps}
+          style={[styles.backgroundBlack, style]} // nền đen chỉ trong nội dung
           contentContainerStyle={[styles.scrollContent, contentContainerStyle]}
           keyboardShouldPersistTaps="handled"
         >
           {children}
         </ScrollView>
       ) : (
-        <View style={[styles.flex, contentContainerStyle]}>{children}</View>
+        <View
+          style={[styles.backgroundBlack, styles.flex, contentContainerStyle]}
+        >
+          {children}
+        </View>
       )}
     </SafeAreaView>
   );
@@ -45,6 +50,7 @@ export const SafeAreaContainer: React.FC<SafeAreaContainerProps> = ({
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
+  backgroundBlack: { backgroundColor: 'black' }, // chỉ áp dụng cho nội dung
   scrollContent: { flexGrow: 1 },
 });
 

@@ -1,23 +1,38 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { View } from 'react-native';
 import {
+  MD3DarkTheme as PaperDarkTheme,
   PaperProvider,
-  MD3LightTheme as PaperTheme,
-  Text,
 } from 'react-native-paper';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Provider } from 'react-redux';
-import AppNavigator from './src/navigation/AppNavigator';
+import AppNavigator, { navigationRef } from './src/navigation/AppNavigator';
+import Toast from 'react-native-toast-message';
 
-const queryClient = new QueryClient();
-
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: false,
+      refetchOnMount: 'always',
+    },
+  },
+});
+const CombinedDarkTheme = {
+  ...PaperDarkTheme,
+  colors: {
+    ...PaperDarkTheme.colors,
+    background: '#000000', // nền đen
+    surface: '#121212', // màu surface tối hơn
+    primary: '#add8e6', // tím nhẹ theo Material Dark
+    text: '#FFFFFF', // text trắng
+  },
+};
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <PaperProvider theme={PaperTheme}>
-        <NavigationContainer>
+      <PaperProvider theme={CombinedDarkTheme}>
+        <NavigationContainer ref={navigationRef}>
           <AppNavigator />
+          <Toast />
         </NavigationContainer>
       </PaperProvider>
     </QueryClientProvider>
